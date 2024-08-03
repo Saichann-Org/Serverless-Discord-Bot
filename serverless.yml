@@ -1,4 +1,4 @@
-org: sai11121209
+org: saichann
 app: aws-discord-app
 service: aws-discord-app
 
@@ -11,7 +11,7 @@ provider:
       api:
         path: ./src/lambda_router
   # Lambda関連
-  architecture: arm64
+  # architecture: arm64
   runtime: python3.11
   memorySize: 128
   timeout: 60
