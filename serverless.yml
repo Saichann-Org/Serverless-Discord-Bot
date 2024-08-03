@@ -58,12 +58,9 @@ functions:
       command:
         - src.router.main.lambda_handler
       events:
-        - http:
-            path: /user
-            method: ANY
-        - http:
-            path: /user/{proxy+}
-            method: ANY
+        - httpApi:
+          method: "*"
+          path: /
 
 resources:
   - ${file(./cloudformation/iam.yml)}
