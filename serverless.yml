@@ -20,7 +20,7 @@ provider:
     role: LambdaExecutionRole
   # デプロイ用S3バケット設定
   deploymentBucket:
-    name: ${self:service}-${self:stage}-deployment-bucket-${aws:accountId}
+    name: ${self:service}-${opt:stage, "develop"}-deployment-bucket-${aws:accountId}
   # X-Rayトレース設定
   tracing:
     apiGateway: true
