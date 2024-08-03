@@ -1,6 +1,6 @@
 org: saichann
-app: aws-discord-app
-service: aws-discord-app
+app: aws-discord-bot
+service: discord-bot
 
 provider:
   name: aws
@@ -20,7 +20,7 @@ provider:
     role: LambdaExecutionRole
   # デプロイ用S3バケット設定
   deploymentBucket:
-    name: ${self:service}-deployment-bucket-${aws:accountId}
+    name: ${self:service}-${self.stage}-deployment-bucket-${aws:accountId}
   # X-Rayトレース設定
   tracing:
     apiGateway: true
