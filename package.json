@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1111.0",
-    "serverless": "^3.39.0",
+    "serverless": "^3.x",
     "serverless-prune-plugin": "^2.0.2"
   }
 }

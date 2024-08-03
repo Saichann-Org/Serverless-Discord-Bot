@@ -32,10 +32,7 @@ jobs:
 
       - run: npm ci
 
-      # TODO npm ciで落とせるようにする
-      # - run: npm i -g serverless@3.x
-
       - name: serverless deploy
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        run: serverless deploy --verbose --stage=${{ inputs.environment }}
+        run: npx serverless deploy --verbose --stage=${{ inputs.environment }}
