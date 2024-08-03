@@ -41,9 +41,9 @@ provider:
   environment:
     VERSION: "1.0.0"
     TZ: Asia/Tokyo
-    APPLICATION_ID: ${env.APPLICATION_ID}
-    DISCORD_PUBLIC_KEY: ${env.DISCORD_PUBLIC_KEY}
-    BOT_TOKEN: ${env.BOT_TOKEN}
+    APPLICATION_ID: ${env:APPLICATION_ID}
+    DISCORD_PUBLIC_KEY: ${env:DISCORD_PUBLIC_KEY}
+    BOT_TOKEN: ${env:BOT_TOKEN}
 
 # plugins:
 #   - serverless-prune-plugin
