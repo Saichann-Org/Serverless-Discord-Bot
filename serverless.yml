@@ -48,7 +48,7 @@ provider:
 #     number: 3
 
 functions:
-  apiLambda:
+  api:
     image:
       name: api
 
