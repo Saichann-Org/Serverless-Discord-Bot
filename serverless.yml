@@ -16,7 +16,6 @@ provider:
   memorySize: 512
   timeout: 60
   versionFunctions: true
-  maximumRetryAttempts: 0
   iam:
     role: LambdaExecutionRole
   # デプロイ用S3バケット設定
@@ -60,18 +59,21 @@ functions:
   router:
     name: ${param:resourceNamePrefix}-router
     url: true
+    maximumRetryAttempts: 0
     image:
       name: core
       command:
         - src.router.main.lambda_handler
   updateSlashCommand:
     name: ${param:resourceNamePrefix}-update-slash-command
+    maximumRetryAttempts: 0
     image:
       name: core
       command:
         - src.common.update_slash_command.lambda_handler
   dog:
     name: ${param:resourceNamePrefix}-dog
+    maximumRetryAttempts: 0
     image:
       name: core
       command:
