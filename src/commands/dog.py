@@ -10,12 +10,13 @@ def lambda_handler(event, context):
     data = res.json()
 
     response = json.dumps({
-        'embeds': [
+        "content": "",
+        "embeds": [
             {
-                'description': 'いぬ',
-                'color': 0x32CD32,
-                'image': {
-                    'url': data['message']
+                "description": "いぬ",
+                "color": 0x32CD32,
+                "image": {
+                    "url": data["message"]
                 }
             }
         ]
