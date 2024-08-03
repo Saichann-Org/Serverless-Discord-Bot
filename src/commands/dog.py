@@ -1,4 +1,3 @@
-import json
 import requests as rq
 from common.defer_command_execution import defer_command_execution
 
