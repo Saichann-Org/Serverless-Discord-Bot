@@ -5,15 +5,15 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "リリース環境"
+        description: "デプロイ環境"
         required: true
         type: environment
-        default: "Develop"
+        default: develop
 
 jobs:
   deploy:
     concurrency: deploy_concurrency_${{ inputs.environment }}
-    name: Backend Deploy ${{ inputs.environment }}
+    name: Deploy ${{ inputs.environment }}
 
     environment:
       name: ${{ inputs.environment }}
@@ -21,9 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.ref_name }}
+      - uses: actions/checkout@v4
 
       - name: Use Node.js
         uses: actions/setup-node@v3
