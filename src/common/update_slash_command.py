@@ -21,7 +21,7 @@ def lambda_handler(event, context):
     command_list = [
         {
             "name": command_file.stem,
-            "description": "",
+            "description": command_file.stem,
             "options": []
         }
         for command_file in commands_directory.glob("*.py")
