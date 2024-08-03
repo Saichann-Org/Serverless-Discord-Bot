@@ -12,6 +12,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 
 # 環境変数の設定
 ENV PATH="/root/.local/bin:${PATH}"
+ENV POETRY_VIRTUALENVS_CREATE=false
 
 # ソースコードをコピー
 COPY . ${LAMBDA_TASK_ROOT}
