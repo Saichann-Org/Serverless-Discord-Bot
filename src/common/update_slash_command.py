@@ -43,9 +43,9 @@ def lambda_handler(event, context):
                     delete_url = f"{commands_url}/{command_id}"
                     delete_response = rq.delete(delete_url, headers=headers)
                     if delete_response.status_code == 204:
-                        print(f"Deleted command {command["name"]} from guild {guild_id}")
+                        print(f"Deleted command {command['name']} from guild {guild_id}")
                     else:
-                        print(f"Failed to delete command {command["name"]} from guild {guild_id}: {delete_response.text}")
+                        print(f"Failed to delete command {command['name']} from guild {guild_id}: {delete_response.text}")
             else:
                 print(f"Failed to fetch existing commands for guild {guild_id}: {existing_commands_response.text}")
 
@@ -53,7 +53,7 @@ def lambda_handler(event, context):
             for command in command_list:
                 post_response = rq.post(commands_url, headers=headers, json=command)
                 if post_response.status_code == 201:
-                    print(f"Command {command["name"]} successfully set for guild {guild_id}")
+                    print(f"Command {command['name']} successfully set for guild {guild_id}")
                 else:
                     print(f"Error {post_response.status_code}: {post_response.text}")
     else:
