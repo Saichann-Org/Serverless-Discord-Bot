@@ -10,7 +10,6 @@ def lambda_handler(event, context):
     data = res.json()
 
     return {
-        # "content": "aa",
         "embeds": [
             {
                 "description": "いぬ",
