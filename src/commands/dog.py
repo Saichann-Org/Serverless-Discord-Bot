@@ -9,18 +9,16 @@ def lambda_handler(event, context):
     res.raise_for_status()
     data = res.json()
 
-    response = json.dumps(
-        {
+    response = json.dumps({
         'embeds': [
-                {
-                    'description': 'いぬ',
-                    'color': 0x32CD32,
-                    'image': {
-                        'url': data['message']
-                    }
+            {
+                'description': 'いぬ',
+                'color': 0x32CD32,
+                'image': {
+                    'url': data['message']
                 }
-            ]
-        }
-    )
+            }
+        ]
+    })
 
     return response
