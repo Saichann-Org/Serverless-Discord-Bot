@@ -1,20 +1,19 @@
 import json
 from discord_interactions import verify_key, InteractionType, InteractionResponseType
 import os
+import boto3
 
 def lambda_handler(event, context):
-    # for debugging
-    # print(event)
+    print(event)
 
     request_body = json.loads(event.get("body", "{}"))
     headers = event.get("headers", {})
 
-    # Verify request
     signature = headers.get("x-signature-ed25519")
     timestamp = headers.get("x-signature-timestamp")
     raw_body = event.get("body", "{}").encode()
     if signature is None or timestamp is None or \
-        not verify_key(raw_body, signature, timestamp, os.environ.get("DISCORD_PUBLIC_KEY")): # Authorization
+        not verify_key(raw_body, signature, timestamp, os.environ.get("DISCORD_PUBLIC_KEY")):
         return {
             'statusCode': 401,
             'body': "Bad request signature"
@@ -27,19 +26,21 @@ def lambda_handler(event, context):
         data = request_body.get("data", {})
         command_name = data.get("name")
 
-        if command_name == "hello":
-            response_text = "Hello there!"
-        elif command_name == "echo":
-            response_text = f"Echoing: {data['options'][0]['value']}"
+        if command_name == "long":
+            response_data = {
+                "type": InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
+            }
+            # Kick another Lambda async
+            client = boto3.client("lambda")
+            client.invoke(
+                FunctionName=os.environ.get("LONG_PROCESS_FUNCTION_NAME"),
+                InvocationType="Event",
+                Payload=json.dumps(request_body)
+            )
+
         else:
             raise NotImplementedError(f"Command '{command_name}' not implemented")
 
-        response_data = {
-            "type": InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            "data": {
-                "content": response_text
-            }
-        }
     else:
         response_data = {"type": InteractionResponseType.PONG}
 
