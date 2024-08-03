@@ -39,7 +39,7 @@ def lambda_handler(event, context):
 
     else:
         response_data = {"type": InteractionResponseType.PONG}
-
+    print(response_data)
     return {
         'statusCode': 200,
         'body': json.dumps(response_data)
