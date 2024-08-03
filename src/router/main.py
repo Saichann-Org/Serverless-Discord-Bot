@@ -23,24 +23,40 @@ def lambda_handler(event, context):
     interaction_type = request_body.get("type")
 
     if interaction_type in [InteractionType.APPLICATION_COMMAND, InteractionType.MESSAGE_COMPONENT]:
+        # data = request_body.get("data", {})
+        # command_name = data.get("name")
+
+        # response_data = {
+        #     "type": InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
+        # }
+        # # Kick another Lambda async
+        # client = boto3.client("lambda")
+        # client.invoke(
+        #     FunctionName=f"{os.environ.get('RESOURCE_NAME_PREFIX')}-{command_name}",
+        #     InvocationType="Event",
+        #     Payload=json.dumps(request_body)
+        # )
+        # return {
+        #     'statusCode': 400,
+        #     'body': json.dumps({
+        #         'error': f"Command '{command_name}' is not implemented."
+        #     })
+        # }
         data = request_body.get("data", {})
         command_name = data.get("name")
 
+        if command_name == "dog":
+            response_text = "Hello there!"
+        elif command_name == "echo":
+            response_text = f"Echoing: {data['options'][0]['value']}"
+        else:
+            raise NotImplementedError(f"Command '{command_name}' not implemented")
+
         response_data = {
-            "type": InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE
-        }
-        # Kick another Lambda async
-        client = boto3.client("lambda")
-        client.invoke(
-            FunctionName=f"{os.environ.get('RESOURCE_NAME_PREFIX')}-{command_name}",
-            InvocationType="Event",
-            Payload=json.dumps(request_body)
-        )
-        return {
-            'statusCode': 400,
-            'body': json.dumps({
-                'error': f"Command '{command_name}' is not implemented."
-            })
+            "type": InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            "data": {
+                "content": response_text
+            }
         }
 
     else:
