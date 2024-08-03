@@ -26,6 +26,7 @@ def lambda_handler(event, context):
         }
         for command_file in commands_directory.glob("*.py")
     ]
+    print(f"command_list: {command_list}")
 
     if response.status_code == 200:
         guilds = response.json()
@@ -58,5 +59,3 @@ def lambda_handler(event, context):
                     print(f"Error {post_response.status_code}: {post_response.text}")
     else:
         print(f"Error {response.status_code}: {response.text}")
-
-lambda_handler("a", "a")
