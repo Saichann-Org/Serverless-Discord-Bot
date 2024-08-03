@@ -49,9 +49,10 @@ provider:
 
 functions:
   api:
-    handler: src.lambda_router.main.lambda_handler
     image:
       name: api
+      command:
+        - src.lambda_router.main.lambda_handler
 
 resources:
   - ${file(./cloudformation/iam.yml)}
