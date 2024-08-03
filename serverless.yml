@@ -53,14 +53,14 @@ provider:
 
 functions:
   router:
+    events:
+      - httpApi:
+        method: "*"
+        path: /
     image:
       name: core
       command:
         - src.router.main.lambda_handler
-      events:
-        - httpApi:
-          method: "*"
-          path: /
 
 resources:
   - ${file(./cloudformation/iam.yml)}
