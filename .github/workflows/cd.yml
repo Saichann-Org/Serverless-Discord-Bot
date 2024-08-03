@@ -1,0 +1,42 @@
+name: CD
+run-name: Deploy ${{ github.ref_name }} branch to ${{ inputs.environment }} environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "リリース環境"
+        required: true
+        type: environment
+        default: "Develop"
+
+jobs:
+  deploy:
+    concurrency: deploy_concurrency_${{ inputs.environment }}
+    name: Backend Deploy ${{ inputs.environment }}
+
+    environment:
+      name: ${{ inputs.environment }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+
+      # TODO npm ciで落とせるようにする
+      - run: npm i -g serverless@4.1.19
+
+      - name: serverless deploy
+        uses: serverless/github-action@v3.2
+        with:
+          args: deploy
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
