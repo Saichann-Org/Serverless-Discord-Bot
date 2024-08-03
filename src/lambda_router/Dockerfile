@@ -12,7 +12,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="/root/.local/bin:${PATH}"
 
 # ソースコードをコピー
-COPY src ${LAMBDA_TASK_ROOT}
+COPY . ${LAMBDA_TASK_ROOT}
 
 # Poetryで依存関係をインストール
 WORKDIR ${LAMBDA_TASK_ROOT}
