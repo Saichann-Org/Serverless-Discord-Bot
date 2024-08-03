@@ -6,9 +6,9 @@ FROM --platform=linux/amd64 public.ecr.aws/lambda/python:3.11-arm64
 #     rm -f lambda-insights-extension-arm64.rpm
 
 # Poetryのインストール
-RUN python3 -m ensurepip && \
-    python3 -m pip install --upgrade pip && \
-    python3 -m pip install poetry
+RUN python -m ensurepip && \
+    python -m pip install --upgrade pip && \
+    python -m pip install poetry
 
 # 環境変数の設定
 ENV PATH="/root/.local/bin:${PATH}"
