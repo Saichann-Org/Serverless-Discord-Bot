@@ -41,7 +41,7 @@ provider:
   environment:
     VERSION: "1.0.0"
     TZ: Asia/Tokyo
-    RESOURCE_NAME_PREFIX: ${self:custom.stages.${self:provider.stage}.resourceNamePrefix}
+    RESOURCE_NAME_PREFIX: ${param:resourceNamePrefix}
     APPLICATION_ID: ${env:APPLICATION_ID}
     DISCORD_PUBLIC_KEY: ${env:DISCORD_PUBLIC_KEY}
     BOT_TOKEN: ${env:BOT_TOKEN}
@@ -50,19 +50,20 @@ provider:
 #   - serverless-prune-plugin
 #   - serverless-offline
 
-custom:
-  stages:
-    develop:
-      resourceNamePrefix: ${self:service}-develop
-    production:
-      resourceNamePrefix: ${self:service}
-  # prune:
-  #   automatic: true
-  #   number: 3
+# custom:
+# prune:
+#   automatic: true
+#   number: 3
+
+params:
+  prod:
+    resourceNamePrefix: ${self:service}
+  dev:
+    resourceNamePrefix: ${self:service}-develop
 
 functions:
   router:
-    name: ${self:custom.resourceNamePrefix}-router
+    name: ${param:resourceNamePrefix}-router
     events:
       - httpApi:
           method: "*"
@@ -72,13 +73,13 @@ functions:
       command:
         - src.router.main.lambda_handler
   updateSlashCommand:
-    name: ${self:custom.resourceNamePrefix}-update-slash-command
+    name: ${param:resourceNamePrefix}-update-slash-command
     image:
       name: core
       command:
         - src.common.update_slash_command.lambda_handler
   dog:
-    name: ${self:custom.resourceNamePrefix}-dog
+    name: ${param:resourceNamePrefix}-dog
     image:
       name: core
       command:
