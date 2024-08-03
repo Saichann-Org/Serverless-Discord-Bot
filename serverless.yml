@@ -60,6 +60,7 @@ functions:
   router:
     name: ${param:resourceNamePrefix}-router
     url: true
+    memorySize: 1024
     image:
       name: core
       command:
