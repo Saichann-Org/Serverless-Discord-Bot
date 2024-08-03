@@ -10,7 +10,7 @@ provider:
     images:
       router:
         path: ./
-        anotherimage:
+        cacheFrom:
           - public.ecr.aws/lambda/python:3.11
   # Lambda関連
   # architecture: arm64
