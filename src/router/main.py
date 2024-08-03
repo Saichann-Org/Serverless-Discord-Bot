@@ -36,6 +36,12 @@ def lambda_handler(event, context):
             InvocationType="Event",
             Payload=json.dumps(request_body)
         )
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                'error': f"Command '{command_name}' is not implemented."
+            })
+        }
 
     else:
         response_data = {"type": InteractionResponseType.PONG}
