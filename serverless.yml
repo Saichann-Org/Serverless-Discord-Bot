@@ -9,7 +9,7 @@ provider:
   ecr:
     images:
       api:
-        path: ./
+        path: ./src/lambda_router
   # Lambda関連
   architecture: arm64
   runtime: python3.11
