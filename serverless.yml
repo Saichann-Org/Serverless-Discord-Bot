@@ -55,8 +55,8 @@ functions:
   router:
     events:
       - httpApi:
-        method: "*"
-        path: /
+          method: "*"
+          path: /
     image:
       name: core
       command:
