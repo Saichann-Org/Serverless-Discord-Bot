@@ -56,10 +56,10 @@ provider:
 #   number: 3
 
 params:
-  prod:
-    resourceNamePrefix: ${self:service}
-  dev:
+  develop:
     resourceNamePrefix: ${self:service}-develop
+  production:
+    resourceNamePrefix: ${self:service}
 
 functions:
   router:
