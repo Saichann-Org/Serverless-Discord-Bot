@@ -13,8 +13,8 @@ provider:
   # Lambda関連
   # architecture: arm64
   runtime: python3.11
-  memorySize: 512
-  timeout: 60
+  memorySize: 256
+  timeout: 120
   versionFunctions: true
   maximumRetryAttempts: 0
   iam:
@@ -60,7 +60,7 @@ functions:
   router:
     name: ${param:resourceNamePrefix}-router
     url: true
-    memorySize: 1024
+    memorySize: 2048
     image:
       name: core
       command:
@@ -71,6 +71,10 @@ functions:
       name: core
       command:
         - src.common.update_slash_command.lambda_handler
+    events:
+      - schedule:
+          rate: rate(10 minutes)
+          enabled: true
   dog:
     name: ${param:resourceNamePrefix}-dog
     image:
