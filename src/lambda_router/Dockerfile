@@ -6,7 +6,7 @@ FROM --platform=linux/amd64 public.ecr.aws/lambda/python:3.11-arm64
 #     rm -f lambda-insights-extension-arm64.rpm
 
 # Poetryのインストール
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN curl -sSL https://install.python-poetry.org | python -
 
 # 環境変数の設定
 ENV PATH="/root/.local/bin:${PATH}"
