@@ -12,7 +12,7 @@
 - **pyenv**: Pythonバージョン管理ツール
 - **Poetry**: Pythonの依存関係管理ツール
 
-### npmのセットアップ
+### ServerlessFrameworkのセットアップ
 
 1. プロジェクトディレクトリに移動します。
 
