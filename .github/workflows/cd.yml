@@ -25,15 +25,15 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
       - run: npm ci
 
-      # # TODO npm ciで落とせるようにする
-      # - run: npm i -g serverless@4.1.19
+      # TODO npm ciで落とせるようにする
+      - run: npm i -g serverless@3.x
 
       - name: serverless deploy
         uses: serverless/github-action@v3.2
