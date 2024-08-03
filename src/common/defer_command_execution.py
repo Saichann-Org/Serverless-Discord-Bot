@@ -1,13 +1,11 @@
 import os
-import time
+import json
+import requests as rq
 from functools import wraps
 
 def defer_command_execution(func):
     @wraps(func)
     def wrapper(event, context, *args, **kwargs):
-        # デバッグ用
-        # print(event)
-
         interaction_token = event.get("token", "")
 
         url = f"https://discord.com/api/v10/webhooks/{os.getenv('APPLICATION_ID')}/{interaction_token}"
@@ -17,7 +15,17 @@ def defer_command_execution(func):
             "User-Agent": "DiscordBot (private use) Python-requests/2.x"
         }
 
-        # 関数に共通データを渡す
-        return func(event, context, url, headers, *args, **kwargs)
+        # コマンド実行
+        payload = func(event, context)
+
+        # Discordへのリクエスト送信
+        response = rq.post(url, headers=headers, data=json.dumps(payload))
+        response.raise_for_status()  # エラーが発生した場合、例外がスローされる
+
+        # 成功時のステータスコードとレスポンスボディ
+        return {
+            'statusCode': response.status_code,
+            'body': response.text
+        }
 
     return wrapper

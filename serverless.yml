@@ -16,6 +16,7 @@ provider:
   memorySize: 512
   timeout: 60
   versionFunctions: true
+  maximumRetryAttempts: 0
   iam:
     role: LambdaExecutionRole
   # デプロイ用S3バケット設定
