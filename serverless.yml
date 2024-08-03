@@ -13,7 +13,7 @@ provider:
   # Lambda関連
   # architecture: arm64
   runtime: python3.11
-  memorySize: 128
+  memorySize: 512
   timeout: 60
   versionFunctions: true
   iam:
@@ -32,12 +32,6 @@ provider:
   stackTags:
     Project: ${self:service}
     Create: ServerlessFramework
-  logs:
-    httpApi: true
-
-  httpApi:
-    name: ${self:service}-api
-
   environment:
     VERSION: "1.0.0"
     TZ: Asia/Tokyo
@@ -64,10 +58,7 @@ params:
 functions:
   router:
     name: ${param:resourceNamePrefix}-router
-    events:
-      - httpApi:
-          method: "*"
-          path: /
+    url: true
     image:
       name: core
       command:
