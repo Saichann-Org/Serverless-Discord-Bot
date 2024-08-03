@@ -1,0 +1,95 @@
+Resources:
+  # ------------------------------------------------------------#
+  # Lambda実行用ロール作成
+  # ------------------------------------------------------------#
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayFullAccess
+        - arn:aws:iam::aws:policy/AWSBatchFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonCognitoReadOnly
+        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AmazonEventBridgeFullAccess
+        - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
+
+  # ------------------------------------------------------------#
+  # Lambda実行用ポリシー作成
+  # ------------------------------------------------------------#
+  LambdaExecutionPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: LambdaExecutionPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - lambda:GetFunction
+              - lambda:EnableReplication*
+              - lambda:DisableReplication*
+              - lambda:InvokeFunction
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - iam:CreateServiceLinkedRole
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - sqs:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - cloudfront:UpdateDistribution
+              - cloudfront:CreateDistribution
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - ecr:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - states:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - sns:Publish
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - rds:ListTagsForResource
+              - rds:DownloadDBLogFilePortion
+              - rds:DescribeRecommendationGroups
+              - rds:DownloadCompleteDBLogFile
+              - rds:DescribeRecommendations
+              - rds:DescribeDBLogFiles
+              - rds:DescribeDBInstances
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - iam:PassRole
+            Resource: "*"
+      Roles:
+        - !Ref LambdaExecutionRole
+
+Outputs:
+  LambdaExecutionRoleArn:
+    Description: "LambdaExecutionRole ARN"
+    Value:
+      Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+    Export:
+      Name: LambdaExecutionRoleArn

@@ -1,0 +1,56 @@
+org: sai11121209
+app: aws-discord-app
+service: aws-discord-app
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'develop'}
+  region: ${opt:region, "ap-northeast-1"}
+  ecr:
+    images:
+      api:
+        path: ./
+  # Lambda関連
+  architecture: arm64
+  runtime: python3.11
+  memorySize: 128
+  timeout: 60
+  versionFunctions: true
+  iam:
+    role: LambdaExecutionRole
+  # デプロイ用S3バケット設定
+  deploymentBucket:
+    name: aws-discord-app-deployment-bucket-${aws:accountId}
+  # X-Rayトレース設定
+  tracing:
+    apiGateway: true
+    lambda: true
+  tags:
+    Project: aws-discord-app
+    Create: ServerlessFramework
+  # resources部のタグ設定
+  stackTags:
+    Project: aws-discord-app
+    Create: ServerlessFramework
+  logs:
+    httpApi: true
+  environment:
+    VERSION: "1.0.0"
+    TZ: Asia/Tokyo
+
+# plugins:
+#   - serverless-prune-plugin
+#   - serverless-offline
+
+# custom:
+#   prune:
+#     automatic: true
+#     number: 3
+
+functions:
+  apiLambda:
+    image:
+      name: api
+
+resources:
+  - ${file(./cloudformation/iam.yml)}
