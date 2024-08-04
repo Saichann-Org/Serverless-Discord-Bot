@@ -61,6 +61,7 @@ functions:
     name: ${param:resourceNamePrefix}-router
     url: true
     memorySize: 4096
+    timeout: 10
     image:
       name: core
       command:
