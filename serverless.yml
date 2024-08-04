@@ -85,3 +85,4 @@ functions:
 
 resources:
   - ${file(./cloudformation/iam.yml)}
+  - ${file(./cloudformation/ecr.yml)}
