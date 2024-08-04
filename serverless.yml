@@ -83,5 +83,12 @@ functions:
       command:
         - src.commands.dog.lambda_handler
 
+  ncodice:
+    name: ${param:resourceNamePrefix}-ncodice
+    image:
+      name: core
+      command:
+        - src.commands.ncodice.lambda_handler
+
 resources:
   - ${file(./cloudformation/iam.yml)}
