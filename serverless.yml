@@ -83,13 +83,22 @@ functions:
       name: core
       command:
         - src.commands.dog.lambda_handler
-
   ncodice:
     name: ${param:resourceNamePrefix}-ncodice
     image:
       name: core
       command:
         - src.commands.ncodice.lambda_handler
+  weather:
+    name: ${param:resourceNamePrefix}-weather
+    image:
+      name: core
+      command:
+        - src.tasks.weather.lambda_handler
+    events:
+      - schedule:
+          rate: cron(0 0 ? * * *)
+          enabled: true
 
 resources:
   - ${file(./cloudformation/iam.yml)}
