@@ -1,7 +1,7 @@
 import random
 from common.defer_command_execution import defer_command_execution
 
-@defer_command_execution
+@defer_command_execution(name="ncodice", description="うこダイス")
 def lambda_handler(event, context):
 
     dice_list = ["お", "ち", "ん", "ま", "う", "こ"]

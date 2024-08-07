@@ -1,6 +1,8 @@
 import os
 import requests as rq
 from pathlib import Path
+import inspect
+import importlib.util
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 APPLICATION_ID = os.environ.get("APPLICATION_ID")
@@ -18,14 +20,22 @@ def lambda_handler(event, context):
     response = rq.get(guilds_url, headers=headers)
 
     commands_directory = Path("src/commands")
-    command_list = [
-        {
-            "name": command_file.stem,
-            "description": command_file.stem,
-            "options": []
-        }
-        for command_file in commands_directory.glob("*.py")
-    ]
+    command_list = []
+
+    for command_file in commands_directory.glob("*.py"):
+        module_name = command_file.stem
+        spec = importlib.util.spec_from_file_location(module_name, command_file)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        for _, obj in inspect.getmembers(module, inspect.isfunction):
+            if hasattr(obj, 'name') and hasattr(obj, 'description') and hasattr(obj, 'options'):
+                command_list.append({
+                    "name": obj.name,
+                    "description": obj.description,
+                    "options": obj.options,
+                })  
+
     print(f"command_list: {command_list}")
 
     if response.status_code == 200:
@@ -59,3 +69,5 @@ def lambda_handler(event, context):
                     print(f"Error {post_response.status_code}: {post_response.text}")
     else:
         print(f"Error {response.status_code}: {response.text}")
+
+lambda_handler("a","a")
