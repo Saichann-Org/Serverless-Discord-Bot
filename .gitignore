@@ -7,3 +7,4 @@ node_modules
 .vscode
 *.code-workspace
 .serverless
+.python-version
