@@ -42,7 +42,7 @@ return部分の記述方法については公式ドキュメントや、[Qiita�
 ```python
 from common.defer_command_execution import defer_command_execution
 
-@defer_command_execution
+@defer_command_execution(name="{コマンド名}", description="{コマンドの説明}")
 def lambda_handler(event, context):
 
     # ここにロジックを追加
