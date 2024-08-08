@@ -4,70 +4,66 @@ from pathlib import Path
 import inspect
 import importlib.util
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
-APPLICATION_ID = os.environ.get("APPLICATION_ID")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+APPLICATION_ID = os.getenv("APPLICATION_ID")
 
-def lambda_handler(event, context):
-    base_url = "https://discord.com/api/v8"
-    guilds_url = f"{base_url}/users/@me/guilds"
-    headers = {
-        "Content-Type": "application/json",
-        "User-Agent": "DiscordBot (private use) Python-urllib/3.11",
-        "Authorization": f"Bot {BOT_TOKEN}",
-    }
+BASE_URL = "https://discord.com/api/v8"
+GUILDS_URL = f"{BASE_URL}/users/@me/guilds"
+HEADERS = {
+    "Content-Type": "application/json",
+    "User-Agent": "DiscordBot (private use) Python-urllib/3.11",
+    "Authorization": f"Bot {BOT_TOKEN}",
+}
 
-    # ギルドのリストを取得
-    response = rq.get(guilds_url, headers=headers)
+def get_guilds():
+    response = rq.get(GUILDS_URL, headers=HEADERS)
+    response.raise_for_status()
+    return response.json()
 
-    commands_directory = Path("src/commands")
-    command_list = []
-
-    for command_file in commands_directory.glob("*.py"):
+def load_commands(commands_directory="src/commands"):
+    commands = []
+    for command_file in Path(commands_directory).glob("*.py"):
         module_name = command_file.stem
         spec = importlib.util.spec_from_file_location(module_name, command_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        for _, obj in inspect.getmembers(module, inspect.isfunction):
-            if hasattr(obj, 'name') and hasattr(obj, 'description') and hasattr(obj, 'options'):
-                command_list.append({
-                    "name": obj.name,
-                    "description": obj.description,
-                    "options": obj.options,
-                })  
+        commands.extend(
+            {
+                "name": func.name,
+                "description": func.description,
+                "options": func.options,
+            }
+            for _, func in inspect.getmembers(module, inspect.isfunction)
+            if all(hasattr(func, attr) for attr in ("name", "description", "options"))
+        )
+    return commands
 
-    print(f"command_list: {command_list}")
+def sync_commands(guild_id, commands):
+    commands_url = f"{BASE_URL}/applications/{APPLICATION_ID}/guilds/{guild_id}/commands"
+    existing_commands = rq.get(commands_url, headers=HEADERS).json()
 
-    if response.status_code == 200:
-        guilds = response.json()
-        for guild in guilds:
-            guild_id = guild["id"]
-            print(f"Processing guild: {guild_id}")
+    existing_names = {cmd["name"] for cmd in existing_commands}
+    new_names = {cmd["name"] for cmd in commands}
 
-            # 既存のコマンドを取得
-            commands_url = f"{base_url}/applications/{APPLICATION_ID}/guilds/{guild_id}/commands"
-            existing_commands_response = rq.get(commands_url, headers=headers)
-            if existing_commands_response.status_code == 200:
-                existing_commands = existing_commands_response.json()
-                for command in existing_commands:
-                    command_id = command["id"]
-                    delete_url = f"{commands_url}/{command_id}"
-                    delete_response = rq.delete(delete_url, headers=headers)
-                    if delete_response.status_code == 204:
-                        print(f"Deleted command {command['name']} from guild {guild_id}")
-                    else:
-                        print(f"Failed to delete command {command['name']} from guild {guild_id}: {delete_response.text}")
-            else:
-                print(f"Failed to fetch existing commands for guild {guild_id}: {existing_commands_response.text}")
+    # 更新・追加
+    for command in commands:
+        if command["name"] in existing_names:
+            existing_cmd = next(cmd for cmd in existing_commands if cmd["name"] == command["name"])
+            if command["description"] != existing_cmd["description"] or command["options"] != existing_cmd["options"]:
+                rq.patch(f"{commands_url}/{existing_cmd['id']}", headers=HEADERS, json=command).raise_for_status()
+        else:
+            rq.post(commands_url, headers=HEADERS, json=command).raise_for_status()
 
-            # 新しいコマンドを登録
-            for command in command_list:
-                post_response = rq.post(commands_url, headers=headers, json=command)
-                if post_response.status_code == 201:
-                    print(f"Command {command['name']} successfully set for guild {guild_id}")
-                else:
-                    print(f"Error {post_response.status_code}: {post_response.text}")
-    else:
-        print(f"Error {response.status_code}: {response.text}")
+    # 削除
+    for command in existing_commands:
+        if command["name"] not in new_names:
+            rq.delete(f"{commands_url}/{command['id']}", headers=HEADERS).raise_for_status()
 
-lambda_handler("a","a")
+def lambda_handler(event, context):
+    commands = load_commands()
+    guilds = get_guilds()
+
+    for guild in guilds:
+        print(f"Processing guild: {guild['id']}")
+        sync_commands(guild["id"], commands)

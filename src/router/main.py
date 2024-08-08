@@ -32,7 +32,7 @@ def lambda_handler(event, context):
         # Kick another Lambda async
         client = boto3.client("lambda")
         client.invoke(
-            FunctionName=f"{os.environ.get('RESOURCE_NAME_PREFIX')}-{command_name}",
+            FunctionName=f"{os.getenv('RESOURCE_NAME_PREFIX')}-{command_name}",
             InvocationType="Event",
             Payload=json.dumps(request_body)
         )

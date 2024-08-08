@@ -75,7 +75,7 @@ functions:
         - src.common.update_slash_command.lambda_handler
     events:
       - schedule:
-          rate: rate(20 minutes)
+          rate: rate(10 minutes)
           enabled: true
   dog:
     name: ${param:resourceNamePrefix}-dog

@@ -9,7 +9,7 @@ def send_to_discord(channel_ids: List[str]) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs) -> Any:
             headers = {
-                "Authorization": f"Bot {os.environ.get('BOT_TOKEN')}",
+                "Authorization": f"Bot {os.getenv('BOT_TOKEN')}",
                 "Content-Type": "application/json"
             }
             
