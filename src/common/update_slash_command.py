@@ -50,7 +50,7 @@ def sync_commands(guild_id, commands):
     for command in commands:
         if command["name"] in existing_names:
             existing_cmd = next(cmd for cmd in existing_commands if cmd["name"] == command["name"])
-            if command["description"] != existing_cmd["description"] or command["options"] != existing_cmd["options"]:
+            if command["description"] != existing_cmd["description"] or command["options"] != existing_cmd.get("options", []):
                 rq.patch(f"{commands_url}/{existing_cmd['id']}", headers=HEADERS, json=command).raise_for_status()
         else:
             rq.post(commands_url, headers=HEADERS, json=command).raise_for_status()
