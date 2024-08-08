@@ -29,6 +29,37 @@ npm ci
 ```bash
 poetry install
 ```
+
+### デバッグセットアップ
+
+コマンド、タスク作成時のデバッグには以下の設定を活用下さい。
+※`poetry install`が完了している前提で稼働します。
+
+```json
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Python: Lambda Local (Current File)",
+                "type": "debugpy",
+                "request": "launch",
+                "program": "${workspaceFolder}/.venv/Scripts/python-lambda-local.exe",
+                "cwd": "${workspaceFolder}",
+                "args": [
+                    "-f", "lambda_handler",
+                    "-t", "500",
+                    "${file}",
+                    "${workspaceFolder}/tests/event.json"
+                ],
+                "console": "integratedTerminal",
+                "env": {
+                    "PYTHONPATH": "${workspaceFolder}/src",
+                },
+            }
+        ]
+    },
+```
+
 ## 新規コマンド追加
 
 本BOTに新規コマンドを追加する場合は以下の手順で追加を行います。

@@ -368,6 +368,20 @@ files = [
 six = ">=1.5"
 
 [[package]]
+name = "python-lambda-local"
+version = "0.1.13"
+description = "Run lambda function in python on local machine."
+optional = false
+python-versions = "*"
+files = [
+    {file = "python-lambda-local-0.1.13.tar.gz", hash = "sha256:51b49efac17b8a9aef90b70f1805e2e274f224a6c084860a0f6bea734378834b"},
+    {file = "python_lambda_local-0.1.13-py3-none-any.whl", hash = "sha256:f7a9a8a9203fe34fb8e038d12cbe44f3ead12d68a82e9b460c6e00ee4b4a69b6"},
+]
+
+[package.dependencies]
+boto3 = "*"
+
+[[package]]
 name = "requests"
 version = "2.32.3"
 description = "Python HTTP for Humans."
@@ -436,4 +450,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.*"
-content-hash = "10396bd985306ef019de3c597ca0a2d4f9aa1bc9c28294d83a71fa5891c3eeb8"
+content-hash = "d9e578773de6c9d2e13a17cc94e8c942ff484106dbaf2357214a560e4d0a267f"
