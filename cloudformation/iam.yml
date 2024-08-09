@@ -81,6 +81,10 @@ Resources:
             Action:
               - iam:PassRole
             Resource: "*"
+          - Effect: Allow
+            Action:
+              - dynamodb:*
+            Resource: "*"
       Roles:
         - !Ref LambdaExecutionRole
 
