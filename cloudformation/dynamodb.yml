@@ -1,0 +1,32 @@
+Resources:
+  RaceDataTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "RaceData"
+      AttributeDefinitions:
+        - AttributeName: "HorseName"
+          AttributeType: "S"
+        - AttributeName: "RaceID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "HorseName"
+          KeyType: "HASH"  # パーティションキー
+        - AttributeName: "RaceID"
+          KeyType: "RANGE"  # ソートキー
+      BillingMode: PAY_PER_REQUEST  # 無料枠を考慮してオンデマンド課金に設定
+      SSESpecification:
+        SSEEnabled: true  # サーバーサイド暗号化を有効化
+
+  PaybackDataTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "PaybackData"
+      AttributeDefinitions:
+        - AttributeName: "RaceID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "RaceID"
+          KeyType: "HASH"  # パーティションキー
+      BillingMode: PAY_PER_REQUEST  # 無料枠を考慮してオンデマンド課金に設定
+      SSESpecification:
+        SSEEnabled: true  # サーバーサイド暗号化を有効化
