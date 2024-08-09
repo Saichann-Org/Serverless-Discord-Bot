@@ -59,26 +59,28 @@ def save_data_to_dynamodb(horse_info, race_info, payback_info, race_id):
 # スクレイピング処理
 year = "2022"  # 西暦を入力
 
-def appendPayBack1(varSoup):  # 複勝とワイド以外で使用
-    varList = []
-    varList.append(varSoup.contents[3].contents[0])
-    varList.append(varSoup.contents[5].contents[0])
-    payBackInfo.append(varList)
 
-def appendPayBack2(varSoup):  # 複勝とワイドで使用
-    varList = []
-    for var in range(3):
-        try:  # 複勝が3個ないときを除く
-            varList.append(varSoup.contents[3].contents[2 * var])
-        except IndexError:
-            pass
-        try:
-            varList.append(varSoup.contents[5].contents[2 * var])
-        except IndexError:
-            pass
-    payBackInfo.append(varList)
 
 def lambda_handler(event, context):
+    def appendPayBack1(varSoup):  # 複勝とワイド以外で使用
+        varList = []
+        varList.append(varSoup.contents[3].contents[0])
+        varList.append(varSoup.contents[5].contents[0])
+        payBackInfo.append(varList)
+
+    def appendPayBack2(varSoup):  # 複勝とワイドで使用
+        varList = []
+        for var in range(3):
+            try:  # 複勝が3個ないときを除く
+                varList.append(varSoup.contents[3].contents[2 * var])
+            except IndexError:
+                pass
+            try:
+                varList.append(varSoup.contents[5].contents[2 * var])
+            except IndexError:
+                pass
+        payBackInfo.append(varList)
+
     List = []
     domin = "https://db.netkeiba.com/race/"
     l = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]  # 競馬場
